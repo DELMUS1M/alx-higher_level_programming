@@ -1,4 +1,6 @@
 #!/usr/bin/python3
+# test_rectangle.py
+# Delmus M Ogora <001@alxschool.com>
 """Defines unittests for models/rectangle.py.
 
 Unittest classes:
