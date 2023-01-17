@@ -1,8 +1,7 @@
 #!/usr/bin/python3
 # test_rectangle.py
-# Delmus M Ogora <001@alxschool.com>
+# Delmus M Ogora <ogoradelmus1@gmail.com>
 """Defines unittests for models/rectangle.py.
-
 Unittest classes:
     TestRectangle_instantiation - line 25
     TestRectangle_width - line 114
@@ -223,6 +222,7 @@ class TestRectangle_height(unittest.TestCase):
             Rectangle(1, (1, 2, 3))
 
     def test_frozenset_height(self):
+        with self.assertRaisesRegex(TypeError, "height must be an integer"):
             Rectangle(1, frozenset({1, 2, 3, 1}))
 
     def test_range_height(self):
@@ -282,6 +282,7 @@ class TestRectangle_x(unittest.TestCase):
             Rectangle(1, 2, {"a": 1, "b": 2}, 2)
 
     def test_bool_x(self):
+        with self.assertRaisesRegex(TypeError, "x must be an integer"):
             Rectangle(1, 2, True, 2)
 
     def test_list_x(self):
@@ -347,6 +348,7 @@ class TestRectangle_y(unittest.TestCase):
     def test_complex_y(self):
         with self.assertRaisesRegex(TypeError, "y must be an integer"):
             Rectangle(1, 2, 3, complex(5))
+
     def test_dict_y(self):
         with self.assertRaisesRegex(TypeError, "y must be an integer"):
             Rectangle(1, 2, 1, {"a": 1, "b": 2})
@@ -453,7 +455,6 @@ class TestRectangle_stdout(unittest.TestCase):
     @staticmethod
     def capture_stdout(rect, method):
         """Captures and returns text printed to stdout.
-
         Args:
             rect (Rectangle): The Rectangle to print to stdout.
             method (str): The method to run on rect.
@@ -573,6 +574,8 @@ class TestRectangle_update_args(unittest.TestCase):
 
     def test_update_args_None_id(self):
         r = Rectangle(10, 10, 10, 10, 10)
+        r.update(None)
+        correct = "[Rectangle] ({}) 10/10 - 10/10".format(r.id)
         self.assertEqual(correct, str(r))
 
     def test_update_args_None_id_and_more(self):
@@ -594,6 +597,7 @@ class TestRectangle_update_args(unittest.TestCase):
 
     def test_update_args_width_zero(self):
         r = Rectangle(10, 10, 10, 10, 10)
+        with self.assertRaisesRegex(ValueError, "width must be > 0"):
             r.update(89, 0)
 
     def test_update_args_width_negative(self):
@@ -708,12 +712,6 @@ class TestRectangle_update_kwargs(unittest.TestCase):
         self.assertEqual(correct, str(r))
 
     def test_update_kwargs_twice(self):
-        r = Rectangle(10, 10, 10, 10, 10)
-        r.update(id=89, x=1, height=2)
-        r.update(y=3, height=15, width=2)
-        self.assertEqual("[Rectangle] (89) 1/3 - 2/15", str(r))
-
-    def test_update_kwargs_invalid_width_type(self):
         r = Rectangle(10, 10, 10, 10, 10)
         r.update(id=89, x=1, height=2)
         r.update(y=3, height=15, width=2)
